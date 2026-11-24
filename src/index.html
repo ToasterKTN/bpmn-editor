@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BPMN- und Formular-Editor</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="toolbar">
+    <div class="brand">
+      <strong>Prozess-Editor</strong>
+      <span>lokal, mit bpmn-js und form-js</span>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Editor">
+      <button type="button" class="tab active" id="tab-bpmn" role="tab" aria-selected="true">BPMN</button>
+      <button type="button" class="tab" id="tab-form" role="tab" aria-selected="false">Formular</button>
+    </nav>
+    <div class="group">
+      <button type="button" id="btn-new" title="Strg+N">Neu</button>
+      <button type="button" id="btn-open" title="Strg+O">Öffnen</button>
+      <button type="button" id="btn-save" class="primary" title="Strg+S">Speichern</button>
+      <button type="button" id="btn-save-as" title="Strg+Umschalt+S">Speichern unter</button>
+      <button type="button" id="btn-download">Herunterladen</button>
+      <button type="button" id="btn-svg">SVG exportieren</button>
+    </div>
+    <div class="sep"></div>
+    <div class="group">
+      <button type="button" id="btn-reload" title="Datei neu von der Festplatte laden">Neu laden</button>
+      <button type="button" id="btn-help" title="Tastaturkürzel">Hilfe</button>
+    </div>
+    <div class="spacer"></div>
+  </header>
+
+  <div class="workspace">
+    <aside class="files" id="files-panel">
+      <div class="files-head">
+        <h2>Dateien</h2>
+        <div class="files-dir" id="files-dir"></div>
+      </div>
+      <ul class="file-list" id="file-list"></ul>
+    </aside>
+
+    <div class="workspace-main" id="workspace-bpmn">
+      <div id="canvas"></div>
+      <div class="banner" id="disk-banner-bpmn">
+        <span class="disk-banner-text">Die Datei wurde auf der Festplatte geändert.</span>
+        <button type="button" class="btn-reload-banner">Neu laden</button>
+        <button type="button" class="btn-dismiss-banner">Behalten</button>
+      </div>
+      <aside id="properties"></aside>
+    </div>
+
+    <div class="workspace-main" id="workspace-form" class="is-hidden">
+      <div id="form-editor"></div>
+      <div class="banner" id="disk-banner-form">
+        <span class="disk-banner-text">Die Datei wurde auf der Festplatte geändert.</span>
+        <button type="button" class="btn-reload-banner">Neu laden</button>
+        <button type="button" class="btn-dismiss-banner">Behalten</button>
+      </div>
+      <aside class="form-preview-panel" id="form-preview-panel">
+        <div class="files-head">
+          <h2>Vorschau</h2>
+        </div>
+        <div id="form-preview"></div>
+      </aside>
+    </div>
+  </div>
+
+  <footer class="status">
+    <span id="status-file">Kein Dokument</span>
+    <span id="status-dirty"></span>
+    <span id="status-mode"></span>
+    <span class="spacer"></span>
+    <span id="status-msg"></span>
+  </footer>
+
+  <input id="open-input" type="file" accept=".bpmn,.form,application/xml,text/xml,application/json">
+
+  <div class="modal-backdrop" id="modal-saveas" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="saveas-title">
+      <h3 id="saveas-title">Speichern unter</h3>
+      <p id="saveas-hint">Dateiname im Ordner:</p>
+      <input type="text" id="saveas-name" spellcheck="false" autocomplete="off">
+      <div class="modal-actions">
+        <button type="button" id="saveas-cancel">Abbrechen</button>
+        <button type="button" class="primary" id="saveas-ok">Speichern</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modal-help" hidden>
+    <div class="modal help" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <h3 id="help-title">Tastaturkürzel</h3>
+      <table>
+        <tr><td><kbd>Strg</kbd>+<kbd>N</kbd></td><td>Neues Diagramm bzw. Formular</td></tr>
+        <tr><td><kbd>Strg</kbd>+<kbd>O</kbd></td><td>Datei öffnen</td></tr>
+        <tr><td><kbd>Strg</kbd>+<kbd>S</kbd></td><td>Speichern</td></tr>
+        <tr><td><kbd>Strg</kbd>+<kbd>Umschalt</kbd>+<kbd>S</kbd></td><td>Speichern unter / Herunterladen</td></tr>
+        <tr><td><kbd>Strg</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd></td><td>Rückgängig / Wiederholen</td></tr>
+        <tr><td><kbd>Entf</kbd></td><td>Element löschen</td></tr>
+        <tr><td>Mausrad</td><td>Zoomen (BPMN)</td></tr>
+        <tr><td>Leertaste + Ziehen</td><td>Zeichenfläche verschieben (BPMN)</td></tr>
+      </table>
+      <p style="margin-top:12px">Die bpmn.io-Wasserzeichen in der BPMN-Zeichenfläche und im Formular dürfen nicht entfernt oder überdeckt werden (Lizenzbedingung).</p>
+      <div class="modal-actions">
+        <button type="button" class="primary" id="help-close">Schließen</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

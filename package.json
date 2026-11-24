@@ -1,0 +1,23 @@
+{
+  "name": "bpmn-editor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lokaler BPMN- und Formular-Editor auf Basis von bpmn-js und form-js",
+  "license": "MIT",
+  "scripts": {
+    "bundle": "node tools/bundle.mjs",
+    "verify": "node tools/verify.mjs",
+    "binaries": "bash tools/build-binaries.sh"
+  },
+  "dependencies": {
+    "@bpmn-io/form-js-editor": "2.2.0",
+    "@bpmn-io/form-js-viewer": "2.2.0",
+    "@bpmn-io/properties-panel": "3.60.2",
+    "bpmn-js": "18.33.1",
+    "bpmn-js-properties-panel": "5.65.4"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "puppeteer-core": "25.18.1"
+  }
+}

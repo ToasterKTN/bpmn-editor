@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_Bestellprozess" targetNamespace="http://bpmn.io/schema/bpmn" exporter="BPMN Editor" exporterVersion="1.0.0">
+  <bpmn:process id="Process_Bestellprozess" name="Bestellprozess" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_Eingang" name="Bestellung eingegangen">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_Pruefen" name="Bestellung prüfen">
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Gueltig" name="Gültig?" default="Flow_Nein">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_Ja</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Nein</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_Zahlung" name="Zahlung prüfen">
+      <bpmn:incoming>Flow_Ja</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_Versand" name="Versand vorbereiten">
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_Ok" name="Bestellung abgeschlossen">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="Task_Kunde" name="Kunde benachrichtigen">
+      <bpmn:incoming>Flow_Nein</bpmn:incoming>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_Nein" name="Bestellung abgelehnt">
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_Eingang" targetRef="Task_Pruefen" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_Pruefen" targetRef="Gateway_Gueltig" />
+    <bpmn:sequenceFlow id="Flow_Ja" name="ja" sourceRef="Gateway_Gueltig" targetRef="Task_Zahlung">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${bestellungGueltig}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Nein" name="nein" sourceRef="Gateway_Gueltig" targetRef="Task_Kunde" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_Zahlung" targetRef="Task_Versand" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_Versand" targetRef="EndEvent_Ok" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_Kunde" targetRef="EndEvent_Nein" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_Bestellprozess">
+      <bpmndi:BPMNShape id="StartEvent_Eingang_di" bpmnElement="StartEvent_Eingang">
+        <dc:Bounds x="180" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="154" y="205" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Pruefen_di" bpmnElement="Task_Pruefen">
+        <dc:Bounds x="280" y="140" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Gueltig_di" bpmnElement="Gateway_Gueltig" isMarkerVisible="true">
+        <dc:Bounds x="460" y="155" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="464" y="212" width="42" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Zahlung_di" bpmnElement="Task_Zahlung">
+        <dc:Bounds x="570" y="140" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Versand_di" bpmnElement="Task_Versand">
+        <dc:Bounds x="750" y="140" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Ok_di" bpmnElement="EndEvent_Ok">
+        <dc:Bounds x="960" y="162" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="934" y="205" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Kunde_di" bpmnElement="Task_Kunde">
+        <dc:Bounds x="570" y="280" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Nein_di" bpmnElement="EndEvent_Nein">
+        <dc:Bounds x="780" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="754" y="345" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="216" y="180" />
+        <di:waypoint x="280" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="400" y="180" />
+        <di:waypoint x="460" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Ja_di" bpmnElement="Flow_Ja">
+        <di:waypoint x="510" y="180" />
+        <di:waypoint x="570" y="180" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="528" y="162" width="14" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Nein_di" bpmnElement="Flow_Nein">
+        <di:waypoint x="485" y="205" />
+        <di:waypoint x="485" y="320" />
+        <di:waypoint x="570" y="320" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="494" y="255" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="690" y="180" />
+        <di:waypoint x="750" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="890" y="180" />
+        <di:waypoint x="960" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="710" y="320" />
+        <di:waypoint x="780" y="320" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

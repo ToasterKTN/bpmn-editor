@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 19,
+  "exporter": { "name": "Prozess-Editor", "version": "1.0.0" },
+  "id": "Form_Bestellung",
+  "type": "default",
+  "components": [
+    {
+      "id": "Text_Titel",
+      "type": "text",
+      "text": "# Bestellformular\n\nBitte die Angaben zur Bestellung ausfüllen. Gehört zum Prozess *Bestellprozess*."
+    },
+    {
+      "id": "Field_Name",
+      "type": "textfield",
+      "key": "name",
+      "label": "Name",
+      "validate": { "required": true }
+    },
+    {
+      "id": "Field_Email",
+      "type": "textfield",
+      "key": "email",
+      "label": "E-Mail",
+      "validate": { "required": true }
+    },
+    {
+      "id": "Field_Nummer",
+      "type": "textfield",
+      "key": "bestellnummer",
+      "label": "Bestellnummer"
+    },
+    {
+      "id": "Field_Artikel",
+      "type": "select",
+      "key": "artikel",
+      "label": "Artikel",
+      "values": [
+        { "label": "Standardpaket", "value": "standard" },
+        { "label": "Premiumpaket", "value": "premium" },
+        { "label": "Ersatzteil", "value": "ersatz" }
+      ]
+    },
+    {
+      "id": "Field_Anzahl",
+      "type": "number",
+      "key": "anzahl",
+      "label": "Anzahl",
+      "defaultValue": 1,
+      "min": 1
+    },
+    {
+      "id": "Field_Kommentar",
+      "type": "textarea",
+      "key": "kommentar",
+      "label": "Kommentar"
+    },
+    {
+      "id": "Field_Agb",
+      "type": "checkbox",
+      "key": "agb",
+      "label": "Ich akzeptiere die Bedingungen",
+      "validate": { "required": true }
+    },
+    {
+      "id": "Button_Submit",
+      "type": "button",
+      "action": "submit",
+      "label": "Absenden"
+    }
+  ]
+}

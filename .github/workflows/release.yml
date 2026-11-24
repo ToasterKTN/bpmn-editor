@@ -1,0 +1,73 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install and bundle frontend
+        run: |
+          npm ci
+          npm run bundle
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+
+      - name: Build binaries
+        run: bash tools/build-binaries.sh
+
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          notes="$(mktemp)"
+          cat > "$notes" <<MD
+          Lokaler BPMN- und Formular-Editor (${tag}).
+
+          ## Start
+
+          Die passende Programmdatei herunterladen, ausführbar machen und mit einem Ordner starten:
+
+          \`\`\`bash
+          chmod +x bpmn-editor-linux-amd64
+          ./bpmn-editor-linux-amd64 ./mein-ordner
+          \`\`\`
+
+          Danach im Browser öffnen: http://127.0.0.1:3456/
+
+          Ohne Server reicht \`bpmn-editor.html\` (Öffnen und Speichern über den Browser).
+
+          Das Programm lauscht nur auf 127.0.0.1. Node.js ist zum Ausführen nicht nötig.
+
+          ## Lizenz
+
+          Der Editor-Rahmen steht unter MIT. bpmn-js und form-js bleiben unter der bpmn.io-Lizenz; die Wasserzeichen dürfen nicht entfernt oder überdeckt werden.
+          MD
+          gh release create "$tag" \
+            --title "$tag" \
+            --notes-file "$notes" \
+            binaries/bpmn-editor-linux-amd64 \
+            binaries/bpmn-editor-linux-arm64 \
+            binaries/bpmn-editor-windows-amd64.exe \
+            binaries/bpmn-editor-darwin-arm64 \
+            binaries/SHA256SUMS \
+            standalone/bpmn-editor.html
