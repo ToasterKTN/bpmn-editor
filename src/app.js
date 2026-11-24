@@ -74,15 +74,18 @@ function setMode(next) {
   $('tab-form').classList.toggle('active', next === 'form');
   $('tab-bpmn').setAttribute('aria-selected', String(next === 'bpmn'));
   $('tab-form').setAttribute('aria-selected', String(next === 'form'));
-  $('workspace-bpmn').classList.toggle('is-hidden', next !== 'bpmn');
-  $('workspace-form').classList.toggle('is-hidden', next !== 'form');
+  $('workspace-bpmn').hidden = next !== 'bpmn';
+  $('workspace-form').hidden = next !== 'form';
   $('btn-svg').hidden = next !== 'bpmn';
   document.body.dataset.mode = next;
-  if (next === 'bpmn') {
-    requestAnimationFrame(() => { try { fitDiagram(); } catch {} });
-  } else {
-    schedulePreview();
-  }
+  requestAnimationFrame(() => {
+    window.dispatchEvent(new Event('resize'));
+    if (next === 'bpmn') {
+      try { fitDiagram(); } catch {}
+    } else {
+      schedulePreview();
+    }
+  });
   refreshStatus();
   const doc = current();
   if (doc.name) history.replaceState(null, '', '#' + encodeURIComponent(doc.name));
@@ -529,6 +532,7 @@ window.__editor = {
     $('btn-save-as').style.display = 'none';
   }
 
+  setMode('bpmn');
   await importXml(NEW_DIAGRAM, null, null);
   await importForm(NEW_FORM, null, null);
 
@@ -538,7 +542,10 @@ window.__editor = {
     const pick = files.find((f) => f.name === wanted) || null;
     if (pick) await openFromServer(pick.name, { force: true });
     else if (wanted && kindOf(wanted) === 'form') setMode('form');
+    else setMode('bpmn');
     watchServer();
+  } else if (wanted && kindOf(wanted) === 'form') {
+    setMode('form');
   }
   refreshStatus();
 })();
